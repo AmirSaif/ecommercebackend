@@ -10,9 +10,11 @@ import path from "path";
 import checkoutController from "./controllers/dummyCheckoutController.js";
 import Order from "./models/orderModel.js";
 
+//For payment gateway
 //import checkoutController from "./controllers/checkoutController.js";
-
+//For debugging
 //dotenv.config({path: path.resolve(process.cwd(),'commerceBackend','.env')});
+
 dotenv.config();
 const app = express();
 
@@ -26,9 +28,17 @@ app.use(cookieParser())
 
 app.use(express.json());
 await connectDB();
+app.get('/api/me', authMiddleware, async (req, res) => {
+  res.json({
+    _id: req.user._id,
+    email: req.user.email,
+    name: req.user.name
+  });
+});
 app.use("/api/auth", authController);
 app.use("/api/list", productsController);
 app.use("/api/secure",authMiddleware, checkoutController);
+
 app.get("/api/secure/orders", authMiddleware, async (req, res) => {
   const orders = await Order.find({userId: req.user._id});
   res.json(orders);

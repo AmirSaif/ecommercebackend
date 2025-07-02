@@ -7,7 +7,7 @@ const router = Router();
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
-  console.log(user.email,user.password);
+  //console.log(user.email,user.password);
 
   if (!user) {
     res.status(401).send({ message: "You need to register first!" });
